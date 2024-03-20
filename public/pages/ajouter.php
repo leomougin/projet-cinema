@@ -1,17 +1,9 @@
 
 <?php
+require_once '../../base.php';
+require_once BASE_PROJECT.'/src/_partials/fonction.php';
+require_once BASE_PROJECT.'/src/database/bd-film.php';
 
-/**
- * @var PDO $pdo
- */
-require '../parts/fonction.php';
-require '../config/db-config-bd.php';
-
-$requete = $connexion->prepare(query: "SELECT * FROM film");
-
-$requete->execute();
-
-$films = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
 
 // Déterminer si le formulaire à été soumis
 // Utilisation d'une variable superglobale $_GET
@@ -64,18 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     if (empty($erreurs)) {
         // Traitement des données ( insertion dans une base de données )
-
-        $requete = $connexion->prepare(query: "INSERT INTO film (titre,duree,resume,date_sortie,pays,lien_image) 
-            VALUES (?,?,?,?,?,?)");
-        $requete->execute(array($titre,$duree,$resume,$date,$pays,$image));
-        $details = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+        addFilms($titre,$duree,$resume,$date,$pays,$image);
 
         // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
         header(header: "Location: ../index.php");
         exit();
     }
 }
-
 ?>
 <!doctype html>
 <html lang="fr"">
@@ -97,15 +84,17 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     </style>
     <title>Nom - Projet Cinema</title>
 </head>
-<body class="bg-light">
+<body>
 
 <!--Insertion d'un menu-->
-<?php include_once 'menu.php' ?>
+<?php include_once BASE_PROJECT.'/src/_partials/header.php' ?>
+<h2 class="text-center mt-5">Ajouter un film </h2>
+<hr class="border border-danger border-1 opacity-75 mb-5">
+
 <div class="container ">
 
-    <h1 class="text-center mt-5 ">Ajouter un film</h1>
-    <div class=" w-50 mx-auto shadow p-5 bg-white">
-        <form class="text-black" action="" method="post" novalidate>
+    <div class=" w-50 mx-auto shadow p-5 bg-white border border-danger border-1">
+        <form class="text-black " action="" method="post" novalidate>
             <div class="mb-3">
                 <label for="titre" class="form-label">Titre *</label>
                 <input type="text"
@@ -125,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <?php endif; ?>
             </div>
             <div class="mb-3">
-                <label for="resume" class="form-label">Synopsis *</label>
+                <label for="resume" class="form-label">Résumé *</label>
                 <input type="text"
                        class="form-control <?= (isset($erreurs['resume'])) ? 'border border-2 border-danger' : '' ?>"
                        id="resume" name="resume" value="<?= $resume ?>" placeholder="Résumé du film ">
@@ -160,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     <p class='form-text text-danger'><?= $erreurs['image'] ?></p>
                 <?php endif; ?>
             </div>
-            <button type="submit" class="btn btn-primary">Valider</button>
+            <button type="submit" class="btn btn-outline-danger">Valider</button>
         </form>
 
     </div>

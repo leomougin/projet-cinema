@@ -15,16 +15,6 @@ function convertirMinutesEnHeures($duree){
            }
        }
 }
-function check_user_mail_if_exists($connexion, $email)
-{
-    $stmt = $connexion->prepare('SELECT count(*)
-            FROM `user`
-            WHERE email = :email');
-    $stmt->bindValue(':email', $email);
-    $stmt->execute();
-    $result = (int)$stmt->fetchColumn();
-    return $result;
-}
 function afficheDateFr($date){
     $format_us = $date;
     $format_fr = implode('/',array_reverse  (explode('-',$format_us)));
@@ -36,7 +26,3 @@ function afficheDateAnnee($date){
     echo $annee;
 }
 
-function isValidMDP($mdp)
-{
-    return preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,14}$/', $mdp)  ;
- }

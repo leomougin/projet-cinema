@@ -1,24 +1,11 @@
 <?php
-// Récupérer la liste des films dans la table film
 
-// 1° Connexion à la base de données bd_cinema
-/**
- * @var PDO $pdo
- */
-require 'config/db-config-bd.php';
+require_once '../base.php';
+require_once BASE_PROJECT.'/src/_partials/fonction.php';
+require_once BASE_PROJECT.'/src/database/bd-film.php';
 
-// 2° Préparation de la requête
-$requete = $connexion->prepare(query: "SELECT * FROM film");
 
-// 3° Exécution de la requête
-$requete->execute();
-
-// 4° Récupération des enregistrements
-// 1 enregistrement = 1 tableau associatif
-$films = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
-
-require 'parts/fonction.php';
-
+$films=getFilms()
 ?>
 
 <!doctype html>
@@ -42,7 +29,7 @@ require 'parts/fonction.php';
 </head>
 <body>
 <!--Insertion d'un menu-->
-<?php include_once 'parts/menu.php' ?>
+<?php require_once BASE_PROJECT.'/src/_partials/header.php' ?>
 
     <!-- Card Film -->
 <section id="#card" class=" m-5 ">
@@ -58,8 +45,8 @@ require 'parts/fonction.php';
                 $pays = $film["pays"];
                 $image = $film["lien_image"];
                 ?>
-              <div class='card border border-info col-lg-3 text-light m-3 mx-auto ' style='width: 18rem'>
-                  <img src='<?=$image?>' class='card-img-top mt-1' alt='affiche du film'>
+              <div class='card border border-light col-lg-3 text-light m-3 mx-auto rounded pt-3' style='width: 18rem'>
+                  <img src='<?=$image?>' width="250" height="250" class='card-img-top mt-1 rounded-5' alt='affiche du film'>
                   <div class='text-center my-3'>
                     <h5 class='card-title text-center'><?=$titre?></h5>
                       <div class=" text-center ">
@@ -68,12 +55,15 @@ require 'parts/fonction.php';
                       </div>
 
 
-                      <button type='button' class='btn btn-outline-danger' ><a class='text-decoration-none' href='parts/detail.php?id_film=<?=$id_film?> '>Synopsis</a></button>
+                      <button type='button' class='btn btn-outline-danger' >
+                          <a class='text-light link-underline link-underline-opacity-0' href='pages/detail.php?id_film=<?=$id_film?> '>Détails</a>
+                      </button>
                 </div>
               </div>
            <?php endforeach; ?>
     </div>
 </section>
 
+<script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

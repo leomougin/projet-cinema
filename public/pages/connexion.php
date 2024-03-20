@@ -1,17 +1,15 @@
 
 <?php
+require_once '../../base.php';
+require_once BASE_PROJECT . '/src/config/db-config-bd.php';
+require_once BASE_PROJECT.'/src/_partials/fonction.php';
 
 /**
  * @var PDO $pdo
  */
-require '../parts/fonction.php';
-require '../config/db-config-bd.php';
 
-$requete = $connexion->prepare(query: "SELECT * FROM film");
 
-$requete->execute();
 
-$films = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
 
 // Déterminer si le formulaire à été soumis
 // Utilisation d'une variable superglobale $_GET
@@ -61,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (empty($erreurs)) {
         // Traitement des données ( insertion dans une base de données )
 
-        $requete = $connexion->prepare(query: "INSERT INTO user (pseudo,email,mot_de_passe) 
+        $requete = $pdo->prepare(query: "INSERT INTO user (pseudo,email,mot_de_passe) 
             VALUES (?,?,?)");
         $requete->execute(array($pseudo,$email,$mdpHash));
         $details = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
@@ -92,13 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     </style>
     <title>Nom - Projet Cinema</title>
 </head>
-<body class="bg-light">
+<body>
 
 <!--Insertion d'un menu-->
-<?php include_once 'menu.php' ?>
+<?php include_once BASE_PROJECT.'/src/_partials/header.php' ?>
+<h2 class="text-center mt-5">Se connecter</h2>
+<hr class="border border-danger border-1 opacity-75 mb-5">
+
 <div class="container ">
 
-    <h1 class="text-center my-5 ">Se connecter</h1>
     <div class=" w-50 mx-auto shadow p-5 bg-white">
         <form class="text-black" action="" method="post" novalidate>
             <div class="mb-3">
@@ -120,8 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <?php endif; ?>
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-primary ">Valider</button>
-                <p class="mt-3 ">Si vous n'avez pas déjà de compte,<a href="inscription.php"> s'inscrire</a></p>
+                <button type="submit" class="btn btn-outline-danger">Valider</button>
+                <p class="mt-3 ">Si vous n'avez pas déjà de compte,<a href="inscription.php " class=" text-black "> s'inscrire</a></p>
             </div>
 
         </form>

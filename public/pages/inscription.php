@@ -1,17 +1,9 @@
 
 <?php
+require_once '../../base.php';
+require_once BASE_PROJECT . '/src/database/bd-user.php';
+require_once BASE_PROJECT.'/src/_partials/fonction.php';
 
-/**
- * @var PDO $pdo
- */
-require '../parts/fonction.php';
-require '../config/db-config-bd.php';
-
-$requete = $connexion->prepare(query: "SELECT * FROM film");
-
-$requete->execute();
-
-$films = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
 
 // Déterminer si le formulaire à été soumis
 // Utilisation d'une variable superglobale $_GET
@@ -46,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $erreurs['email'] = "Un email est olbigatoire !";
     }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreurs['email'] = "L'email n'est pas valide !";
-    }elseif(check_user_mail_if_exists($connexion,$email)){
+    }elseif(checkMailExists(getConnexion(),$email)){
         $erreurs["email"]="Un utilisateur s'est déjà inscrit avec cette adresse email!";
     }
     if (empty($mdp)) {
@@ -64,10 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (empty($erreurs)) {
         // Traitement des données ( insertion dans une base de données )
 
-        $requete = $connexion->prepare(query: "INSERT INTO user (pseudo,email,mot_de_passe) 
-            VALUES (?,?,?)");
-        $requete->execute(array($pseudo,$email,$mdpHash));
-        $details = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+        addUser($pseudo,$email,$mdpHash);
 
         // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
         header(header: "Location: ../index.php");
@@ -95,14 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     </style>
     <title>Nom - Projet Cinema</title>
 </head>
-<body class="bg-light">
+<body>
 
 <!--Insertion d'un menu-->
-<?php include_once 'menu.php' ?>
+<?php include_once BASE_PROJECT.'/src/_partials/header.php' ?>
+<h2 class="text-center mt-5">S'inscrire</h2>
+<hr class="border border-danger border-1 opacity-75 mb-5">
 <div class="container ">
 
-    <h1 class="text-center my-5 ">S'inscrire</h1>
-    <div class=" w-50 mx-auto shadow p-5 bg-white">
+    <div class=" w-50 mx-auto shadow p-5 bg-white ">
         <form class="text-black" action="" method="post" novalidate>
             <div class="mb-3">
                 <label for="pseudo" class="form-label">Pseudo *</label>
@@ -140,8 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     <p class='form-text text-danger'><?= $erreurs['mdpconf'] ?></p>
                 <?php endif; ?>
             </div>
-            <button type="submit" class="btn btn-primary">Valider</button>
-            <p class="mt-3 ">Si vous avez déjà un compte,<a href="connexion.php"> se connecter</a></p>
+            <button type="submit" class="btn btn-outline-danger">Valider</button>
+            <p class="mt-3 ">Si vous avez déjà un compte,<a href="connexion.php" class="text-black "> se connecter</a></p>
         </form>
 
     </div>
