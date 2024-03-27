@@ -1,7 +1,17 @@
 <?php
+session_start();
+$pseudo = NULL;
+if (isset($_SESSION["pseudo"])) {
+    $pseudo = $_SESSION["pseudo"];
+}
+if(isset($_SESSION["id_user"])){
+    $id_user=$_SESSION["id_user"];
+}
 require_once '../../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
 require_once BASE_PROJECT.'/src/database/bd-film.php';
+require_once BASE_PROJECT.'/src/database/bd-user.php';
+
 
 
 /**
@@ -43,6 +53,7 @@ if(isset($_GET["id_film"])){
 <section id="#detail" class=" m-5 ">
     <?php if($id_film): ?>
         <?php $details=getDetails($id_film);
+
         foreach ($details as $detail):
         $id_film = $detail["id_film"];
         $titre = $detail["titre"];
@@ -51,18 +62,23 @@ if(isset($_GET["id_film"])){
         $date = $detail["date_sortie"];
         $pays = $detail["pays"];
         $image = $detail["lien_image"];
+        $id_user=$detail["id_user"];
         endforeach;
+
+        $result=getPseudoFromId($id_user);
+        $pseudoCreateFilm=$result[0]["pseudo"];
          if ($details!=null): ?>
             <h2 class="text-center">Détails </h2>
             <hr class="border border-danger border-1 opacity-75 mb-5">
-            <div class="container text-black d-flex bg-white ps-0 border border-danger border-1 ">
-                <img src=' <?= $detail["lien_image"] ?>' class='w-25 pe-5' alt='affiche du film'>
+            <div class=" p-5 container text-black d-flex bg-white ps-0 border border-danger border-1 rounded-5 ">
+                <img src=' <?= $detail["lien_image"] ?>' class='w-25 px-5' alt='affiche du film'>
                 <div class='mt-4'>
                     <h4 class='text-center mb-4'><strong><?= $detail["titre"] ?></strong></h4>
                     <p class=' '>Dure <?= convertirMinutesEnHeures($detail["duree"]) ?> minutes</p>
                     <p class=''>Est sortie le <?= afficheDateFr($detail["date_sortie"]) ?></p>
-                    <p class=''><?= $detail["resume"] ?></p
-
+                    <p class=''><?= $detail["resume"] ?></p>
+                    <p class='text-end'>Ce film a été créé par <?=$pseudoCreateFilm?></p>
+                    <p></p>
                 </div>
             </div>
         <?php else: ?>

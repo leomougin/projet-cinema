@@ -1,3 +1,4 @@
+
 <header>
     <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid">
@@ -11,19 +12,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?php  BASE_PROJECT?>/">Accueil</a>
                     </li>
-                    <li class="nav-item ms-2">
-                        <a class="nav-link " href="<?php BASE_PROJECT?>/pages/ajouter.php">Ajouter un film</a>
-                    </li>
+                    <?php if (!empty($_SESSION)): ?>
+                        <li class="nav-item ms-2">
+                            <a class="nav-link " href="<?php BASE_PROJECT?>/pages/ajouter.php">Ajouter un film</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="<?php BASE_PROJECT?>/pages/deconnexion.php">Se déconnecter</a>
+                        </li>
+                    <?php endif ?>
+                    <?php if (empty($_SESSION)): ?>
                     <li class="nav-item ms-2">
                         <a class="nav-link btn btn-outline-danger " href="<?php BASE_PROJECT?>/pages/inscription.php">S'inscrire</a>
                     </li>
                     <li class="nav-item ms-2">
                         <a class="nav-link btn btn-outline-danger" href="<?php BASE_PROJECT?>/pages/connexion.php">Se connecter</a>
                     </li>
-
+                    <?php endif ?>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-
+<?php if (isset($_SESSION["pseudo"])): ?>
+    <p class="fst-italic text-end me-5 mt-3">Vous êtes connecté en tant que <span class="text-danger"><?=$pseudo ?></span> !!</p>
+<?php endif ?>

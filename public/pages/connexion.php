@@ -1,8 +1,14 @@
 
 <?php
+ session_start();
+if (!empty($_SESSION)) {
+    header( "Location: /");
+}
 require_once '../../base.php';
 require_once BASE_PROJECT . '/src/config/db-config-bd.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
+require_once BASE_PROJECT.'/src/database/bd-user.php';
+
 
 /**
  * @var PDO $pdo
@@ -16,10 +22,10 @@ require_once BASE_PROJECT.'/src/_partials/fonction.php';
 //$_SERVER : tableau associatif contenant des inforlations sur la requête
 
 $erreurs = [];
-$pseudo = "";
 $email = "";
 $mdp = "";
-$mdpconf = "";
+$user = "";
+$users = getUser();
 
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -29,44 +35,44 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Récupérer les valeurs saisies par l'utilisateur
     // Superglobal $_POST: tableau associatif
 
-    $pseudo = $_POST['pseudo'];
     $email= $_POST['email'];
     $mdp = $_POST['mdp'];
-    $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
-
-    $mdpconf = $_POST['mdpconf'];
 
 
     // Validation des données
-    if (empty($pseudo)) {
-        $erreurs['pseudo'] = "Un pseudo est olbigatoire !";
-    }
+
     if (empty($email)) {
-        $erreurs['email'] = "Un email est olbigatoire !";
+        $erreurs['connexion'] = "L'email ou le mot de passe n'est pas valide !";
     }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erreurs['email'] = "L'email n'est pas valide !";
+        $erreurs['connexion'] = "L'email ou le mot de passe n'est pas valide !";
     }
     if (empty($mdp)) {
-        $erreurs['mdp'] = "Un mot de passe est olbigatoire !";
+        $erreurs['connexion'] = "L'email ou le mot de passe n'est pas valide !";
     }
-    if (empty($mdpconf)) {
-        $erreurs['mdpconf'] = "La confirmation de votre mot de passe est olbigatoire !";
-    }elseif ($mdp!=$mdpconf){
-        $erreurs['mdpconf'] = " Veuillez saisir le même mot de passe !";
-    }
-    // Traiter les données
 
+    // Traiter les données
     if (empty($erreurs)) {
         // Traitement des données ( insertion dans une base de données )
 
-        $requete = $pdo->prepare(query: "INSERT INTO user (pseudo,email,mot_de_passe) 
-            VALUES (?,?,?)");
-        $requete->execute(array($pseudo,$email,$mdpHash));
-        $details = $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+        foreach ($users as $user) {
+            $pseudo=$user["pseudo"];
+            if(!checkMailExists($email)){
+                $erreurs["connexion"]="L'email ou le mot de passe n'est pas valide !";
 
-        // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
-        header(header: "Location: ../index.php");
-        exit();
+            }
+            elseif(!password_verify($mdp,$user["mot_de_passe"])){
+                $erreurs["connexion"]="L'email ou le mot de passe n'est pas valide !";
+
+            }
+
+            else{
+                $_SESSION["pseudo"]=$pseudo;
+                $_SESSION["id_user"]=$user["id_user"];
+                // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
+                header( "Location: ../index.php");
+                exit();
+            }
+        }
     }
 }
 ?>
@@ -98,25 +104,26 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <hr class="border border-danger border-1 opacity-75 mb-5">
 
 <div class="container ">
-
-    <div class=" w-50 mx-auto shadow p-5 bg-white">
+    <div class=" w-50 mx-auto shadow p-5 bg-white rounded-5">
         <form class="text-black" action="" method="post" novalidate>
             <div class="mb-3">
                 <label for="email" class="form-label">Email *</label>
-                <input type="text"
-                       class="form-control <?= (isset($erreurs['email'])) ? 'border border-2 border-danger' : '' ?>"
+                <input type="email"
+                       class="form-control <?= (isset($erreurs['connexion'])) ? 'border border-2 border-danger' : '' ?>"
                        id="email" name="email" value="<?= $email ?>" placeholder="john77@gmail.com">
-                <?php if (isset($erreurs['email'])): ?>
-                    <p class='form-text text-danger'><?= $erreurs['email'] ?></p>
+                <?php if (isset($erreurs['connexion'])): ?>
+                    <p class='form-text text-danger'><?= $erreurs['connexion'] ?></p>
                 <?php endif; ?>
             </div>
             <div class="mb-3">
-                <label for="mdp" class="form-label">Mot de passe *</label>
+                <label for="mdp" class="form-label">
+                    Mot de passe *
+                </label>
                 <input type="password"
-                       class="form-control <?= (isset($erreurs['mdp'])) ? 'border border-2 border-danger' : '' ?>"
+                       class="form-control <?= (isset($erreurs['connexion'])) ? 'border border-2 border-danger' : '' ?>"
                        id="mdp" name="mdp" value="<?= $mdp ?>">
-                <?php if (isset($erreurs['mdp'])): ?>
-                    <p class='form-text text-danger'><?= $erreurs['mdp'] ?></p>
+                <?php if (isset($erreurs['connexion'])): ?>
+                    <p class='form-text text-danger'><?= $erreurs['connexion'] ?></p>
                 <?php endif; ?>
             </div>
             <div class="text-center">

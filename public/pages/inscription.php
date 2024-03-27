@@ -1,5 +1,9 @@
 
 <?php
+session_start();
+if (!empty($_SESSION)) {
+    header( "Location: /");
+}
 require_once '../../base.php';
 require_once BASE_PROJECT . '/src/database/bd-user.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
@@ -38,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $erreurs['email'] = "Un email est olbigatoire !";
     }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreurs['email'] = "L'email n'est pas valide !";
-    }elseif(checkMailExists(getConnexion(),$email)){
+    }elseif(checkMailExists($email)){
         $erreurs["email"]="Un utilisateur s'est déjà inscrit avec cette adresse email!";
     }
     if (empty($mdp)) {
@@ -92,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <hr class="border border-danger border-1 opacity-75 mb-5">
 <div class="container ">
 
-    <div class=" w-50 mx-auto shadow p-5 bg-white ">
+    <div class=" w-50 mx-auto shadow p-5 bg-white rounded-5 ">
         <form class="text-black" action="" method="post" novalidate>
             <div class="mb-3">
                 <label for="pseudo" class="form-label">Pseudo *</label>

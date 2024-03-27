@@ -1,5 +1,18 @@
 
 <?php
+session_start();
+$pseudo=NULL;
+if (empty($_SESSION)) {
+    header( "Location: /");
+}
+
+if(isset($_SESSION["pseudo"])){
+    $pseudo=$_SESSION["pseudo"];
+}
+
+if(isset($_SESSION["id_user"])){
+    $id_user=$_SESSION["id_user"];
+}
 require_once '../../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
 require_once BASE_PROJECT.'/src/database/bd-film.php';
@@ -16,6 +29,7 @@ $resume = "";
 $date = "";
 $pays = "";
 $image = "";
+
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
@@ -56,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     if (empty($erreurs)) {
         // Traitement des données ( insertion dans une base de données )
-        addFilms($titre,$duree,$resume,$date,$pays,$image);
+        addFilms($titre,$duree,$resume,$date,$pays,$image,$id_user);
 
         // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
         header(header: "Location: ../index.php");
@@ -93,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 <div class="container ">
 
-    <div class=" w-50 mx-auto shadow p-5 bg-white border border-danger border-1">
+    <div class=" w-50 mx-auto shadow p-5 bg-white border border-danger border-1 rounded-5">
         <form class="text-black " action="" method="post" novalidate>
             <div class="mb-3">
                 <label for="titre" class="form-label">Titre *</label>

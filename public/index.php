@@ -1,5 +1,9 @@
 <?php
-
+session_start();
+$pseudo = NULL;
+if (isset($_SESSION["pseudo"])) {
+    $pseudo = $_SESSION["pseudo"];
+}
 require_once '../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
 require_once BASE_PROJECT.'/src/database/bd-film.php';
@@ -33,6 +37,8 @@ $films=getFilms()
 
     <!-- Card Film -->
 <section id="#card" class=" m-5 ">
+    <p>ATTENTION QUELQUE TRUC DE REFACTOR A FINIR</p>
+
     <h2>Liste de film </h2>
     <hr class="border border-danger border-2 opacity-75">
     <div class='row row-cols-1 row-cols-md-2  '>
@@ -45,7 +51,7 @@ $films=getFilms()
                 $pays = $film["pays"];
                 $image = $film["lien_image"];
                 ?>
-              <div class='card border border-light col-lg-3 text-light m-3 mx-auto rounded pt-3' style='width: 18rem'>
+              <div class='card border border-light col-lg-3 text-light m-3 mx-auto rounded-5 pt-3' style='width: 18rem'>
                   <img src='<?=$image?>' width="250" height="250" class='card-img-top mt-1 rounded-5' alt='affiche du film'>
                   <div class='text-center my-3'>
                     <h5 class='card-title text-center'><?=$titre?></h5>
