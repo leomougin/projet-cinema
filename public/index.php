@@ -37,7 +37,7 @@ $films=getFilms()
 
     <!-- Card Film -->
 <section id="#card" class=" m-5 ">
-    <p>ATTENTION QUELQUE TRUC DE REFACTOR A FINIR</p>
+    <!--<p>ATTENTION QUELQUE TRUC DE REFACTOR A FINIR</p>-->
 
     <h2>Liste de film </h2>
     <hr class="border border-danger border-2 opacity-75">

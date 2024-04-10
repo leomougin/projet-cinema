@@ -22,6 +22,7 @@ $id_film=NULL;
 if(isset($_GET["id_film"])){
     $id_film=$_GET["id_film"];
 }
+
 ?>
 <!doctype html>
 <html lang="fr"">
@@ -50,8 +51,8 @@ if(isset($_GET["id_film"])){
 <?php include_once BASE_PROJECT.'/src/_partials/header.php' ?>
 
 <!-- Card détail -->
-<section id="#detail" class=" m-5 ">
     <?php if($id_film): ?>
+        <section id="#detail" class=" m-5 ">
         <?php $details=getDetails($id_film);
 
         foreach ($details as $detail):
@@ -64,8 +65,11 @@ if(isset($_GET["id_film"])){
         $image = $detail["lien_image"];
         $id_user=$detail["id_user"];
         endforeach;
-
+        if($id_user==NULL) {
+            $id_user = 2;
+        }
         $result=getPseudoFromId($id_user);
+        // porblème quand id = NULL
         $pseudoCreateFilm=$result[0]["pseudo"];
          if ($details!=null): ?>
             <h2 class="text-center">Détails </h2>
@@ -81,13 +85,26 @@ if(isset($_GET["id_film"])){
                     <p></p>
                 </div>
             </div>
+         </section>
+        <section id="#avis" class=" m-5 ">
+            <h2 class="text-center">Avis </h2>
+            <hr class="border border-danger border-1 opacity-75 mb-5">
+            <a href="/pages/avis.php?id_film=<?=$id_film?>">Ajouter un avis</a>
+        </section>
         <?php else: ?>
-             <h1 class="text-center fw-bold "> Film introuvable !</h1>
-        <?php endif;
-    else: ?>
+    <section id="#detail" class=" m-5 ">
+
         <h1 class="text-center fw-bold "> Film introuvable !</h1>
-    <?php endif; ?>
-</section>
+    </section>
+
+         <?php endif;?>
+    <?php else:?>
+        <section id="#detail" class=" m-5 ">
+            <h1 class="text-center fw-bold "> Film introuvable !</h1>
+        </section>
+
+    <?php endif;?>
+
 
 <script src="../assets/js/bootstrap.bundle.min.js"></script>
 </body>

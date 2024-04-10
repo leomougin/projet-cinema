@@ -1,5 +1,9 @@
 <?php
 require_once BASE_PROJECT.'/src/config/db-config-bd.php';
+require_once BASE_PROJECT.'/src/database/bd-film.php';
+require_once BASE_PROJECT.'/src/database/bd-avis.php';
+
+
 
 function checkMailExists(string $email)
 {
@@ -23,14 +27,13 @@ function addUser($pseudo,$email,$mdpHash):void
                         VALUES (?,?,?)");
     $requete->execute(array($pseudo,$email,$mdpHash));
 }
-function verifUser(int $id_user):array
-{
-    $pdo = getConnexion();
-    $requete = $pdo->prepare(query: "SELECT * FROM user WHERE id_user= $id_user ");
-    $requete ->execute();
-    return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
-
-}
+//function verifUser(int $id_user):array
+//{
+//    $pdo = getConnexion();
+//    $requete = $pdo->prepare(query: "SELECT * FROM user WHERE id_user= $id_user ");
+//    $requete ->execute();
+//    return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+//}
 function getUser():array
 {
     $pdo = getConnexion();
@@ -43,6 +46,13 @@ function getPseudoFromId(int $id_user):array
 {
     $pdo = getConnexion();
     $requete = $pdo->prepare(query: "SELECT pseudo FROM user WHERE id_user LIKE '$id_user' ");
+    $requete ->execute();
+    return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+}
+function getIdFromPseudo( $pseudo):array
+{
+    $pdo = getConnexion();
+    $requete = $pdo->prepare(query: "SELECT id_user FROM user WHERE pseudo LIKE '$pseudo' ");
     $requete ->execute();
     return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
 }

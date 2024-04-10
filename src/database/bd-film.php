@@ -1,5 +1,9 @@
 <?php
 require_once BASE_PROJECT.'/src/config/db-config-bd.php';
+require_once BASE_PROJECT.'/src/database/bd-user.php';
+require_once BASE_PROJECT.'/src/database/bd-avis.php';
+
+
 
 /**
  * @var PDO $pdo
@@ -26,3 +30,10 @@ function addFilms($titre,$duree,$resume,$date,$pays,$image,$id_user):void
     $requete->execute(array($titre,$duree,$resume,$date,$pays,$image,$id_user));
 }
 
+function getFilmsByUser($id_user):array
+{
+    $pdo = getConnexion();
+    $requete = $pdo->prepare(query: "SELECT * FROM film WHERE id_user = '$id_user' ");
+    $requete ->execute();
+    return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+}

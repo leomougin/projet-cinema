@@ -16,6 +16,8 @@
                         <li class="nav-item ms-2">
                             <a class="nav-link " href="<?php BASE_PROJECT?>/pages/ajouter.php">Ajouter un film</a>
                         </li>
+                            <a class="nav-link " href="<?php BASE_PROJECT?>/pages/mesfilms.php">Mes films</a>
+                        </li>
                         <li>
                             <a class="nav-link" href="<?php BASE_PROJECT?>/pages/deconnexion.php">Se déconnecter</a>
                         </li>
