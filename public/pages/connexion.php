@@ -10,12 +10,6 @@ require_once BASE_PROJECT.'/src/_partials/fonction.php';
 require_once BASE_PROJECT.'/src/database/bd-user.php';
 
 
-/**
- * @var PDO $pdo
- */
-
-
-
 
 // Déterminer si le formulaire à été soumis
 // Utilisation d'une variable superglobale $_GET
@@ -24,9 +18,7 @@ require_once BASE_PROJECT.'/src/database/bd-user.php';
 $erreurs = [];
 $email = "";
 $mdp = "";
-$user = "";
 $users = getUser();
-
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
@@ -55,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         // Traitement des données ( insertion dans une base de données )
 
         foreach ($users as $user) {
-            $pseudo=$user["pseudo"];
             if(!checkMailExists($email)){
                 $erreurs["connexion"]="L'email ou le mot de passe n'est pas valide !";
 
@@ -66,8 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             }
 
             else{
-                $_SESSION["pseudo"]=$pseudo;
-                $_SESSION["id_user"]=$user["id_user"];
+                $utilisateurs = getUserFromEmail($email);
+                print_r($utilisateurs);
+
+                $_SESSION["utilisateur"]=[
+                        "id" => $utilisateurs[0]["id_user"],
+                    "pseudo" => $utilisateurs[0]["pseudo"],
+                     "email" => $utilisateurs[0]["email"],
+                ];
+
                 // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
                 header( "Location: ../index.php");
                 exit();

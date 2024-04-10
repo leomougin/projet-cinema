@@ -6,12 +6,12 @@ if (empty($_SESSION)) {
     header( "Location: /");
 }
 
-if(isset($_SESSION["pseudo"])){
-    $pseudo=$_SESSION["pseudo"];
+if(isset($_SESSION["utilisateur"])){
+    $pseudo=$_SESSION["utilisateur"]["pseudo"];
 }
 
-if(isset($_SESSION["id_user"])){
-    $id_user=$_SESSION["id_user"];
+if(isset($_SESSION["utilisateur"])){
+    $id_user=$_SESSION["utilisateur"]["id"];
 }
 require_once '../../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';

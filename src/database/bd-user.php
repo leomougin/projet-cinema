@@ -37,7 +37,14 @@ function addUser($pseudo,$email,$mdpHash):void
 function getUser():array
 {
     $pdo = getConnexion();
-    $requete = $pdo->prepare(query: "SELECT * FROM user  ");
+    $requete = $pdo->prepare(query: "SELECT * FROM user ");
+    $requete ->execute();
+    return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
+}
+function getUserFromEmail($email):array
+{
+    $pdo = getConnexion();
+    $requete = $pdo->prepare(query: "SELECT * FROM user WHERE email LIKE '$email'");
     $requete ->execute();
     return $requete->fetchAll(mode: PDO::FETCH_ASSOC);
 }

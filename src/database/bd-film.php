@@ -19,7 +19,7 @@ function getFilms(): array
 function getDetails($id_film): array
 {
     $pdo = getConnexion();
-    $requete = $pdo->query("SELECT * FROM film WHERE id_film=$id_film");
+    $requete = $pdo->query("SELECT * FROM film WHERE id_film='$id_film'");
     return $requete->fetchAll(PDO::FETCH_ASSOC);
 }
 function addFilms($titre,$duree,$resume,$date,$pays,$image,$id_user):void

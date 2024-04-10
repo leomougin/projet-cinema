@@ -2,26 +2,26 @@
 <?php
 session_start();
 $pseudo=NULL;
-if (empty($_SESSION)) {
-    header( "Location: /");
+// Remettre après avoir finis config de création des avis
+//if (empty($_SESSION)) {
+//    header( "Location: /");
+//}
+
+if(isset($_SESSION["utilisateur"])){
+    $pseudo=$_SESSION["utilisateur"]["pseudo"];
 }
 
-if(isset($_SESSION["pseudo"])){
-    $pseudo=$_SESSION["pseudo"];
-}
-
-if(isset($_SESSION["id_user"])){
-    $id_user=$_SESSION["id_user"];
+if(isset($_SESSION["utilisateur"])){
+    $id_user=$_SESSION["utilisateur"]["id"];
 }
 require_once '../../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
 require_once BASE_PROJECT.'/src/database/bd-film.php';
 
-$id_filmtest=NULL;
+$id_film=NULL;
 if(isset($_GET["id_film"])){
-    $id_filmtest=$_GET["id_film"];
+    $id_film=$_GET["id_film"];
 }
-print_r($id_filmtest);
 
 // Déterminer si le formulaire à été soumis
 // Utilisation d'une variable superglobale $_GET
@@ -31,7 +31,6 @@ $erreurs = [];
 $titre = "";
 $avis="";
 $note=0;
-$date = date("Y-m-d H:i:s");
 
 
 
@@ -45,8 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $titre = $_POST['titre'];
     $avis = $_POST['avis'];
     $note = $_POST['note'];
-    $id_user=getIdFromPseudo($pseudo);
-    $id_film="";
+    $id_film=$id_film;
 
     // Validation des données
     if (empty($titre)) {
@@ -56,19 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (empty($avis)) {
         $erreurs['resume'] = "Un avis est olbigatoire !";
     }
-    if (empty($notre)) {
+    if (empty($note)) {
         $erreurs['date'] = "Une note est olbigatoire !";
     }
 
 
-    // Traiter les données
 
+    // Traiter les données
     if (empty($erreurs)) {
         // Traitement des données ( insertion dans une base de données )
-        addFilms($titre,$duree,$resume,$date,$pays,$image,$id_user);
+        addAvis($titre,$avis,$note,date("Y-m-d"),date("H:i:s"),$id_user,$id_film);
 
         // Rediriger l'utilisateur vers une autre page du site ( souvent page d'accueil )
-        header(header: "Location: ../index.php");
+        header(header: 'Location: / ');
         exit();
     }
 }
@@ -115,9 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             </div>
             <div class="mb-3">
                 <label for="avis" class="form-label">Avis *</label>
-                <input type="text"
+                <textarea type="text"
                        class="form-control <?= (isset($erreurs['avis'])) ? 'border border-2 border-danger' : '' ?>"
-                       id="avis" name="avis" value="<?= $avis ?>" placeholder="Avis à propos du film ">
+                          id="avis" name="avis" placeholder="Avis à propos du film "></textarea>
                 <?php if (isset($erreurs['resume'])): ?>
                     <p class='form-text text-danger'><?= $erreurs['avis'] ?></p>
                 <?php endif; ?>

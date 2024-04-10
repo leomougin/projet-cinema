@@ -35,6 +35,6 @@
         </div>
     </nav>
 </header>
-<?php if (isset($_SESSION["pseudo"])): ?>
+<?php if (isset($_SESSION["utilisateur"])): ?>
     <p class="fst-italic text-end me-5 mt-3">Vous êtes connecté en tant que <span class="text-danger"><?=$pseudo ?></span> !!</p>
 <?php endif ?>

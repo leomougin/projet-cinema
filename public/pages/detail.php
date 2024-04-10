@@ -1,11 +1,11 @@
 <?php
 session_start();
 $pseudo = NULL;
-if (isset($_SESSION["pseudo"])) {
-    $pseudo = $_SESSION["pseudo"];
+if (isset($_SESSION["utilisateur"])) {
+    $pseudo = $_SESSION["utilisateur"]["pseudo"];
 }
-if(isset($_SESSION["id_user"])){
-    $id_user=$_SESSION["id_user"];
+if(isset($_SESSION["utilisateur"])){
+    $id_user=$_SESSION["utilisateur"]["id"];
 }
 require_once '../../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
@@ -13,14 +13,23 @@ require_once BASE_PROJECT.'/src/database/bd-film.php';
 require_once BASE_PROJECT.'/src/database/bd-user.php';
 
 
-
-/**
- * @var PDO $pdo
- */
-
 $id_film=NULL;
 if(isset($_GET["id_film"])){
     $id_film=$_GET["id_film"];
+}
+$Avis=getAvis($id_film);
+
+
+foreach ($Avis as $avis) {
+    var_dump($avis);
+    $date = $avis["date"];
+    $date_heure = $avis["date_heure"];
+    $id_user_avis = $avis["id_user"];
+    $id_avis = $avis["id_avis"];
+    $note = $avis["note"];
+    $titre = $avis["titre"];
+    $avis = $avis["avis"];
+
 }
 
 ?>
@@ -69,6 +78,7 @@ if(isset($_GET["id_film"])){
             $id_user = 2;
         }
         $result=getPseudoFromId($id_user);
+
         // porblème quand id = NULL
         $pseudoCreateFilm=$result[0]["pseudo"];
          if ($details!=null): ?>
@@ -89,7 +99,10 @@ if(isset($_GET["id_film"])){
         <section id="#avis" class=" m-5 ">
             <h2 class="text-center">Avis </h2>
             <hr class="border border-danger border-1 opacity-75 mb-5">
-            <a href="/pages/avis.php?id_film=<?=$id_film?>">Ajouter un avis</a>
+            <a class="text-end" href="/pages/avis.php?id_film=<?=$id_film?>">Ajouter un avis</a>
+
+
+
         </section>
         <?php else: ?>
     <section id="#detail" class=" m-5 ">

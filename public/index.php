@@ -1,8 +1,8 @@
 <?php
 session_start();
 $pseudo = NULL;
-if (isset($_SESSION["pseudo"])) {
-    $pseudo = $_SESSION["pseudo"];
+if (isset($_SESSION["utilisateur"])) {
+    $pseudo = $_SESSION["utilisateur"]["pseudo"];
 }
 require_once '../base.php';
 require_once BASE_PROJECT.'/src/_partials/fonction.php';
@@ -32,6 +32,7 @@ $films=getFilms()
     <title>Nom - Projet Cinema</title>
 </head>
 <body>
+
 <!--Insertion d'un menu-->
 <?php require_once BASE_PROJECT.'/src/_partials/header.php' ?>
 

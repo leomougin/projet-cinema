@@ -115,9 +115,39 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <?php if (isset($erreurs['email'])): ?>
                     <p class='form-text text-danger'><?= $erreurs['email'] ?></p>
                 <?php endif; ?>
+                <div id="emailHelp" class="text-light">Nous ne divulgerons jamais votre adresse email.</div>
             </div>
             <div class="mb-3">
                 <label for="mdp" class="form-label">Mot de passe *</label>
+
+                <button type="button" class="btn mb-1" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                    <i class="bi bi-info-circle text-black"></i>
+                </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Les caractéristiques de votre mot de
+                                    passe </h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body bg-white">
+                                <ul>
+                                    <li>
+                                        Votre mot de passe doit contenir entre 8 et 14 caractères
+                                    </li>
+                                    <li>
+                                        Il doit contenir au moins une minuscule, une majuscule et un chiffre!
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <input type="password"
                        class="form-control <?= (isset($erreurs['mdp'])) ? 'border border-2 border-danger' : '' ?>"
                        id="mdp" name="mdp" value="<?= $mdp ?>">
